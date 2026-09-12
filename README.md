@@ -17,9 +17,9 @@ are retained and their logits are averaged before softmax.
 PDM/
 ├── train_DualMagic_proto_single_gpu.py        # main PDM training entry
 ├── prototype_guidance.py                      # prototype memory and guidance
-├── train_DualMagic_v2_fullbase.py             # shared training/runtime utilities
+├── pdm_runtime.py                            # shared training/runtime utilities
 ├── GALoss.py                                  # GACE and GADice
-├── GALoss_dualmagic_v1.py                     # directional-weight schedule
+├── pdm_schedules.py                          # directional-weight schedule
 ├── dataloaders/
 ├── networks/
 ├── utils/
@@ -27,9 +27,11 @@ PDM/
 └── requirements_galoss_no_torch.txt
 ```
 
-`train_DualMagic_v2_fullbase.py` and `GALoss_dualmagic_v1.py` are retained
-because the final PDM entry imports runtime utilities from them. They are not
-separate experiments that must be run.
+Only the final PDM training entry and its dependencies are included. Shared
+runtime functions and the cosine weight schedule live in `pdm_runtime.py` and
+`pdm_schedules.py`; legacy training entries and experimental loss classes are
+not included. The `utils/test_*.py` files are required by validation and final
+testing during training, not separate ablation scripts.
 
 ## Environment
 
@@ -143,12 +145,12 @@ CUDA_VISIBLE_DEVICES=0 nohup python -u train_DualMagic_proto_single_gpu.py \
   --seed 42 \
   --device 0 \
   --num_workers 2 \
-  --max_iteration 60000 \
+  --max_iteration 17000 \
   --aux_max_weight 0.02 \
   --prototype_count 3 \
   --save_path ./model \
-  --exp PDM_K3_60k_s42 \
-  > logs/pdm_synapse_k3_60k_s42.log 2>&1 &
+  --exp PDM_K3_17k_s42 \
+  > logs/pdm_synapse_k3_17k_s42.log 2>&1 &
 ```
 
 ### AMOS, 5% labeled split
@@ -170,8 +172,10 @@ CUDA_VISIBLE_DEVICES=0 nohup python -u train_DualMagic_proto_single_gpu.py \
   > logs/pdm_amos_k3_60k_s1337.log 2>&1 &
 ```
 
-The inherited parser defaults to 17,000 iterations. `--max_iteration 60000`
-is therefore specified explicitly for the 60k setting.
+The commands use 17,000 iterations for Synapse and 60,000 for AMOS. Both
+students are updated once per iteration. Validation selects the best paired
+checkpoint within the run; final testing evaluates Student A, Student B, and
+their logit ensemble using that pair.
 
 Use a unique `--exp` value for every run. The training script intentionally
 refuses to write into a nonempty experiment directory, preventing accidental

@@ -1,0 +1,29 @@
+# PDM runtime dependencies for Linux.
+#
+# The PyTorch stack is intentionally excluded:
+#   torch
+#   torchvision
+#   torchaudio
+#
+# The training scripts import torchvision, so install a torchvision build that
+# matches the torch/CUDA build already present on the server before using this
+# file. Do not let pip choose an unrelated PyTorch build automatically.
+
+numpy
+scipy
+h5py
+nibabel
+MedPy
+scikit-image
+surface-distance
+tensorboardX
+tqdm
+einops
+Pillow
+PyYAML
+huggingface-hub
+safetensors
+
+# Install timm separately with:
+#   python -m pip install --no-deps timm
+# This prevents timm from pulling a new torch/torchvision/triton stack.
