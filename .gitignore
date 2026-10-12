@@ -1,12 +1,5 @@
-# Local image volumes are large and may be subject to their own distribution
-# terms. Keep only the small, reproducibility-critical split files in Git.
-data/*
-!data/amos_splits/
-!data/amos_splits/*.txt
-!data/Synapse_npy/
-data/Synapse_npy/*
-!data/Synapse_npy/splits/
-!data/Synapse_npy/splits/*.txt
+# Local datasets and preparation files
+/data/
 
 # Runtime outputs
 model/

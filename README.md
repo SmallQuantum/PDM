@@ -82,11 +82,14 @@ python -m pip install --no-deps timm
 
 ## Data preparation
 
-Preprocessed image volumes are not tracked by Git because the local data occupy
-approximately 37.6 GB and individual Synapse files can exceed standard GitHub
-file limits. The small Synapse and AMOS split text files are retained in the
-repository for reproducibility. Obtain the image volumes under their respective
-licenses and place them inside this repository as follows:
+Data and preparation instructions can be obtained from
+[GALoss](https://github.com/cicailalala/GALoss) and
+[DHC](https://github.com/xmed-lab/DHC). Follow their dataset preparation
+instructions and obtain the data under their respective licenses.
+
+The entire `data/` directory, including image volumes and split files, is
+ignored by Git. Place the prepared data and the corresponding Synapse and
+AMOS split text files inside this repository as follows:
 
 ```text
 PDM/data/
@@ -125,9 +128,9 @@ mkdir -p model logs
 
 The main training entry reads the released DHC/SKCDF Synapse partition directly
 from `data/Synapse_npy/splits/`; the former GALoss hard-coded partition is not
-included. `--labelnum 2`, `4`, and `8` select the provided 10%, 20%, and 40%
+included. `--labelnum 2`, `4`, and `8` select the 10%, 20%, and 40%
 labeled lists, respectively. The paper setting is `--labelnum 4`. AMOS reads
-the provided text files in `data/amos_splits/`.
+the prepared text files in `data/amos_splits/`.
 
 ## Single-GPU training
 
